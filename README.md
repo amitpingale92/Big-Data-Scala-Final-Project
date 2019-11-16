@@ -8,6 +8,9 @@
 * Develop robust data pipeline for information digestion
 * Deploy machine learning model in the pipeline for reactive experience
 
+## Architecture
+![alt text](https://github.com/amitpingale92/Big-Data-Scala-Final-Project/blob/master/Images/ScalaProjectArchitecture.png "Architecture")
+
 ## Authors
 * Amit Pingale
 * Shreya Nair
