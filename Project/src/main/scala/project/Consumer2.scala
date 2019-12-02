@@ -34,13 +34,13 @@ object Consumer2 {
       val record = consumer.poll(1000).asScala
       for (data <- record.iterator) {
         println(data.value())
-        val test: Unit = parseData(data, collection)
+        val test: Unit = parseDataAndInsert(data, collection)
         println(test.toString)
       }
     }
   }
 
-  def parseData(data: ConsumerRecord[String, String], collection: MongoCollection[Document]): Unit = {
+  def parseDataAndInsert(data: ConsumerRecord[String, String], collection: MongoCollection[Document]): Unit = {
     val responseOne: String = data.value()
     val globalMap = responseOne.parseJson.convertTo[Map[String, JsValue]]
 
