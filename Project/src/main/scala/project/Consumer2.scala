@@ -9,9 +9,9 @@ import scala.collection.JavaConverters._
 import org.mongodb.scala.{MongoCollection, _}
 import mongo.Helpers._
 
-object Consumer1 {
+object Consumer2 {
   def main(args: Array[String]): Unit = {
-    consumeFromKafka("ABC")
+    consumeFromKafka("AAPL")
   }
 
   def consumeFromKafka(topic: String) = {
@@ -28,7 +28,7 @@ object Consumer1 {
 
     val database: MongoDatabase = mongoClient.getDatabase("projectdb")
 
-    val collection: MongoCollection[Document] = database.getCollection("ABC");
+    val collection: MongoCollection[Document] = database.getCollection("AAPL");
 
     while (true) {
       val record = consumer.poll(1000).asScala
