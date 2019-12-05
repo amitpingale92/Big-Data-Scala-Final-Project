@@ -7,7 +7,7 @@ import org.apache.kafka.clients.producer._
 import scalaj.http.{Http, HttpRequest}
 object Producer2 {
   def main(args: Array[String]): Unit = {
-    writeToKafka("AAPL")
+    writeToKafka("GM")
   }
 
   def writeToKafka(topic: String): Unit = {
@@ -17,10 +17,10 @@ object Producer2 {
     props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     val producer = new KafkaProducer[String, String](props)
     while(true) {
-      val request: HttpRequest = Http("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=U4HV0SUO7S0J40TC")
+      val request: HttpRequest = Http("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=GM&interval=5min&apikey=U4HV0SUO7S0J40TC")
       val record = new ProducerRecord[String, String](topic, request.asString.body)
       producer.send(record)
-      Thread.sleep(5000)
+      Thread.sleep(300000)
       //      producer.close()
     }
   }

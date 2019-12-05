@@ -11,7 +11,7 @@ import mongo.Helpers._
 
 object Consumer1 {
   def main(args: Array[String]): Unit = {
-    consumeFromKafka("ABC")
+    consumeFromKafka("Ford")
   }
 
   def consumeFromKafka(topic: String) = {
@@ -26,9 +26,9 @@ object Consumer1 {
 
     val mongoClient: MongoClient = MongoClient()
 
-    val database: MongoDatabase = mongoClient.getDatabase("projectdb")
+    val database: MongoDatabase = mongoClient.getDatabase("scaladb")
 
-    val collection: MongoCollection[Document] = database.getCollection("ABC");
+    val collection: MongoCollection[Document] = database.getCollection("ford");
 
     while (true) {
       val record = consumer.poll(1000).asScala
@@ -71,7 +71,7 @@ object Consumer1 {
         "Close" -> close,
         "Volume" -> volume
       )
-
+      //Push only the recent data
       collection.insertOne(doc).results()
     }
   }

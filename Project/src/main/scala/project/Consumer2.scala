@@ -11,7 +11,7 @@ import mongo.Helpers._
 
 object Consumer2 {
   def main(args: Array[String]): Unit = {
-    consumeFromKafka("AAPL")
+    consumeFromKafka("GM")
   }
 
   def consumeFromKafka(topic: String) = {
@@ -26,9 +26,9 @@ object Consumer2 {
 
     val mongoClient: MongoClient = MongoClient()
 
-    val database: MongoDatabase = mongoClient.getDatabase("projectdb")
+    val database: MongoDatabase = mongoClient.getDatabase("scaladb")
 
-    val collection: MongoCollection[Document] = database.getCollection("AAPL");
+    val collection: MongoCollection[Document] = database.getCollection("gm");
 
     while (true) {
       val record = consumer.poll(1000).asScala
