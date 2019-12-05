@@ -25,4 +25,16 @@ object OutputSaver {
 
   }
 
+  def MetricSaver(dataFrame: DataFrame): Unit = {
+
+    dataFrame
+      .select("Model", "RMSE")
+      .write
+      .mode(saveMode = SaveMode.Overwrite)
+      .csv(path = "./Model_metrics/model_metrics_csv")
+
+
+  }
+
+
 }
