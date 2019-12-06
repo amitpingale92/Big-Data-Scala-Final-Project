@@ -9,6 +9,8 @@ import scala.concurrent.duration.Duration
 
 object Helpers {
 
+  // Helper class for performing transaction on MongoDB
+
   implicit class DocumentObservable[C](val observable: Observable[Document]) extends ImplicitObservable[Document] {
     override val converter: (Document) => String = (doc) => doc.toJson
   }
