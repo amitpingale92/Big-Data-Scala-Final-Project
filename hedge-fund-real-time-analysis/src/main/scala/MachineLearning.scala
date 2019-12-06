@@ -24,7 +24,6 @@ import org.apache.spark.ml.util.MLWritable
 object MachineLearning extends App {
 
 
-
   def pipelineFit(dataFrame: DataFrame, Symbol: String): PipelineModel = {
     println("*************************************")
     dataFrame.show()
@@ -45,7 +44,7 @@ object MachineLearning extends App {
     val Array(trainingData, testData) = dataFrame.randomSplit(Array(0.7, 0.3))
 
     val df_train = featureAssembler.transform(trainingData)
-    val df_test =  featureAssembler.transform(testData)
+    val df_test = featureAssembler.transform(testData)
 
     //val final_model
 
@@ -89,7 +88,7 @@ object MachineLearning extends App {
       .setLabelCol("label")
       .setFeaturesCol("features")
 
-    val rfrModel: RandomForestRegressionModel  = rf.fit(df_train)
+    val rfrModel: RandomForestRegressionModel = rf.fit(df_train)
     val predictions_rfr = rfrModel.transform(df_test)
 
     // select (prediction, true label)
@@ -106,7 +105,7 @@ object MachineLearning extends App {
       .setFeaturesCol("features")
       .setMaxIter(10)
 
-    val gbtModel: GBTRegressionModel  = gbt.fit(df_train)
+    val gbtModel: GBTRegressionModel = gbt.fit(df_train)
     val predictions_gbt = gbtModel.transform(df_test)
     predictions_gbt.select("prediction", "label", "features").show(5)
 
@@ -129,7 +128,7 @@ object MachineLearning extends App {
 
 
     //*************************  Selecting model with lowest RSME value for deployment in pipeline *************************
-    def lowestKeyMember[Any](m: Map[Double,Any]): Any = m(m.keys.min)
+    def lowestKeyMember[Any](m: Map[Double, Any]): Any = m(m.keys.min)
 
     val models: Map[Double, Any] = Map(
       rmse_lr -> lrModel,
@@ -138,7 +137,7 @@ object MachineLearning extends App {
       rmse_gbr -> gbtModel
     )
 
-   val final_model = lowestKeyMember(models).asInstanceOf[PipelineStage]
+    val final_model = lowestKeyMember(models).asInstanceOf[PipelineStage]
 
     //*************************  Creating Pipeline *************************
 
