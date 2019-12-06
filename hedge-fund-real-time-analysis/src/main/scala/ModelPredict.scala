@@ -25,7 +25,7 @@ object ModelPredict {
     val predictions = fittedPipeline.transform(dataset = cleanTestData)
 
     // save prediction
-    OutputSaver.predictionsSaver(sparkSession = spark, dataFrame = predictions)
+    OutputSaver.predictionsSaver(sparkSession = spark, dataFrame = predictions, Symbol = stock_symbol)
 
   }
 

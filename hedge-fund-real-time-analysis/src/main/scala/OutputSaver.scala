@@ -26,7 +26,7 @@ object OutputSaver {
   }
 
   // function to save predictions
-  def predictionsSaver(sparkSession: SparkSession , dataFrame: DataFrame): Unit = {
+  def predictionsSaver(sparkSession: SparkSession , dataFrame: DataFrame, Symbol : String): Unit = {
 
     dataFrame
       .select( "Timestamp","High", "Low", "Close", "Volume", "prediction")
@@ -36,14 +36,13 @@ object OutputSaver {
       .csv(path = "./predictions/predictions_csv/")
 
     //save in mongo
-    sparkSession.conf.set("spark.mongodb.input.uri", "mongodb://127.0.0.1/scaladb.fordPredict")
-    //val df_predicted = sparkSession.read.csv("./predictions/predictions_csv/")
+    sparkSession.conf.set("spark.mongodb.input.uri", s"mongodb://127.0.0.1/scaladb.$Symbol.prediction")
     val df_predicted = sparkSession.read.format("csv").option("header", "true").load("./predictions/predictions_csv/")
 
     df_predicted.write
       .option("uri","mongodb://127.0.0.1/")
       .option("spark.mongodb.output.database", "scaladb")
-      .option("spark.mongodb.output.collection", "fordPrediction")
+      .option("spark.mongodb.output.collection", s"$Symbol.prediction")
 
       .format(source = "mongo").mode("append").save()
 

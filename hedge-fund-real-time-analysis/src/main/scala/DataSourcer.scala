@@ -16,10 +16,9 @@ object DataSourcer {
   def rawTrainData(sparkSession: SparkSession, Symbol : String): DataFrame = {
 
     // load train data from local
-    //sparkSession.read.option("header", "true").csv("./src/main/resources/F.csv") // mongoDB all documents with particular stock
-    val readConfig: ReadConfig = ReadConfig(Map("uri" -> "mongodb://127.0.0.1/", "database" -> "scaladb", "collection" ->  Symbol)) // 1)
-    //sparkSession.read.format("mongo").load()
-    sparkSession.read.mongo(readConfig)
+    sparkSession.read.option("header", "true").csv("./src/main/resources/F.csv") // mongoDB all documents with particular stock
+//    val readConfig: ReadConfig = ReadConfig(Map("uri" -> "mongodb://127.0.0.1/", "database" -> "scaladb", "collection" ->  Symbol)) // 1)
+//    sparkSession.read.mongo(readConfig)
 
 
   }
@@ -31,8 +30,9 @@ object DataSourcer {
     //    sparkSession.read.option("header", "true").csv("./src/main/resources/test.csv") //mongoDB 1st document of document
     //      .withColumn("Open", lit("0"))
 
-//    sparkSession.read.option("header", "true").csv("./src/main/resources/F-test.csv") //mongoDB 1st document of document
-//      .withColumn("Open", lit("0"))
+      //    sparkSession.read.option("header", "true").csv("./src/main/resources/F-test.csv") //mongoDB 1st document of document
+      //      .withColumn("Open", lit("0"))
+
         val readConfig: ReadConfig = ReadConfig(Map("uri" -> "mongodb://127.0.0.1/", "database" -> "scaladb", "collection" -> Symbol)) // 1)
         val df = sparkSession.read.mongo(readConfig)
         //val df: DataFrame = sparkSession.read.format("mongo").load()
