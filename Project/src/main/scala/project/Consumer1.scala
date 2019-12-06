@@ -71,7 +71,7 @@ object Consumer1 {
         "Close" -> close,
         "Volume" -> volume
       )
-      //Push only the recent data
+      //Push data into MongoDB
       collection.insertOne(doc).results()
     }
   }
