@@ -23,6 +23,8 @@ object OutputSaver {
       .mode(saveMode = SaveMode.Overwrite)
       .csv(path = "./predictions/predictions_csv")
 
+    //save in mongo
+
   }
 
   def MetricSaver(dataFrame: DataFrame): Unit = {

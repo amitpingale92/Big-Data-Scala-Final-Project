@@ -124,6 +124,13 @@ object MachineLearning {
 
 
     //*************************  Selecting model with lowest RSME value for deployment in pipeline *************************
+//    val models = Map(
+//      lrModel -> rmse_lr,
+//      dtModel -> rmse_dt,
+//      rfrModel -> rmse_rfr,
+//      gbtModel -> rmse_gbr
+//    )
+
     val final_model = rf
 
 
