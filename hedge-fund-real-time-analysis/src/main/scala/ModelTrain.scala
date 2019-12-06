@@ -4,11 +4,14 @@ object ModelTrain {
 
   def main(args: Array[String]): Unit = {
 
+    //stock symbol
+    val stock_symbol = "ford"
+
     // create spark session
     val spark = SparkSessionCreator.sparkSessionCreate()
 
     // train data
-    val rawTrainData = DataSourcer.rawTrainData(sparkSession = spark)
+    val rawTrainData = DataSourcer.rawTrainData(sparkSession = spark, Symbol = stock_symbol)
 
     // clean train data
     val cleanTrainData = DataCleaner.cleanData(dataFrame = rawTrainData)

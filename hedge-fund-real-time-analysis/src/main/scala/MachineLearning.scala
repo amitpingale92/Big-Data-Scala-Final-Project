@@ -12,7 +12,7 @@ import OutputSaver._
 import scala.math._
 import org.apache.spark.sql.types._
 import java.util.HashMap
-import java.util.Map;
+//import java.util.Map;
 
 // do final data preparations for machine learning here
 // define and run machine learning models here
@@ -36,6 +36,9 @@ object MachineLearning {
       )
       )
       .setOutputCol("features")
+
+    //1st row multiply by 30
+
 
     val Array(trainingData, testData) = dataFrame.randomSplit(Array(0.7, 0.3))
 
@@ -125,13 +128,18 @@ object MachineLearning {
 
     //*************************  Selecting model with lowest RSME value for deployment in pipeline *************************
 //    val models = Map(
-//      lrModel -> rmse_lr,
-//      dtModel -> rmse_dt,
-//      rfrModel -> rmse_rfr,
-//      gbtModel -> rmse_gbr
+//      rmse_lr -> lrModel,
+//      rmse_dt -> dtModel,
+//      rmse_rfr -> rfrModel,
+//      rmse_gbr -> gbtModel
 //    )
 
-    val final_model = rf
+
+
+    val final_model = gbtModel
+
+
+    //val final_model = rfrModel
 
 
     // chain indexers and forest in a Pipeline

@@ -12,6 +12,7 @@ object DataCleaner {
     def formatData(dataFrame: DataFrame): DataFrame = {
 
       dataFrame
+        .withColumn("Timestamp", dataFrame("Timestamp").cast("String"))
         .withColumn("Open", dataFrame("Open").cast("Double"))
         .withColumn("High", dataFrame("High").cast("Double"))
         .withColumn("Low", dataFrame("Low").cast("Double"))

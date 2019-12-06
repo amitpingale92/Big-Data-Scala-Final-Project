@@ -14,9 +14,11 @@ object SparkSessionCreator {
       .builder()
       .master("local")
       .appName("hedge-fund-real-time-analysis")
-      .config("spark.mongodb.input.uri", "mongodb://127.0.0.1/scaladb.ford")
-      .config("spark.mongodb.output.uri", "mongodb://127.0.0.1/scaladb.ford")
+//      .config("spark.mongodb.input.uri", "mongodb://127.0.0.1/scaladb.ford")
+//      .config("spark.mongodb.output.uri", "mongodb://127.0.0.1/scaladb.ford")
       .getOrCreate()
+
+
 
   }
 
