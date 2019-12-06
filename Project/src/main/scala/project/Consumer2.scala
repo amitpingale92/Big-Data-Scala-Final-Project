@@ -72,6 +72,7 @@ object Consumer2 {
         "Volume" -> volume
       )
 
+      //Push data into MongoDB
       collection.insertOne(doc).results()
     }
   }
