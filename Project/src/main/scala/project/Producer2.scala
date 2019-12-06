@@ -16,6 +16,8 @@ object Producer2 {
     props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     val producer = new KafkaProducer[String, String](props)
+
+    // Make API call in every 5 minutes
     while(true) {
       val request: HttpRequest = Http("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=GM&interval=5min&apikey=U4HV0SUO7S0J40TC")
       val record = new ProducerRecord[String, String](topic, request.asString.body)
