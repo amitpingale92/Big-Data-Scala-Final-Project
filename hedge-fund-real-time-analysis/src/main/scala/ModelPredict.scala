@@ -10,27 +10,27 @@ object ModelPredict {
 
     Logger.getLogger("org").setLevel(Level.OFF)
 
-    def runModelPredict(Symbol: String) : Unit = {
-        //stock symbol
-        val stock_symbol = Symbol
+    def runModelPredict(Symbol: String): Unit = {
+      //stock symbol
+      val stock_symbol = Symbol
 
-        // create spark session
-        val spark = SparkSessionCreator.sparkSessionCreate()
+      // create spark session
+      val spark = SparkSessionCreator.sparkSessionCreate()
 
-        // train data
-        val rawTestData = DataSourcer.rawTestData(sparkSession = spark, Symbol = stock_symbol)
+      // train data
+      val rawTestData = DataSourcer.rawTestData(sparkSession = spark, Symbol = stock_symbol)
 
-        // clean train data
-        val cleanTestData = DataCleaner.cleanData(dataFrame = rawTestData)
+      // clean train data
+      val cleanTestData = DataCleaner.cleanData(dataFrame = rawTestData)
 
-        // load fitted pipeline
-        val fittedPipeline = PipelineModel.load(s"./${stock_symbol}_pipelines/${stock_symbol}_fitted-pipeline")
+      // load fitted pipeline
+      val fittedPipeline = PipelineModel.load(s"./${stock_symbol}_pipelines/${stock_symbol}_fitted-pipeline")
 
-        // make predictions
-        val predictions = fittedPipeline.transform(dataset = cleanTestData)
+      // make predictions
+      val predictions = fittedPipeline.transform(dataset = cleanTestData)
 
-        // save prediction
-        OutputSaver.predictionsSaver(sparkSession = spark, dataFrame = predictions, Symbol = stock_symbol)
+      // save prediction
+      OutputSaver.predictionsSaver(sparkSession = spark, dataFrame = predictions, Symbol = stock_symbol)
     }
 
     runModelPredict("ford")
