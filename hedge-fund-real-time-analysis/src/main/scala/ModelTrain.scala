@@ -1,26 +1,38 @@
 import OutputSaver._
 
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
+
+
+
+
 object ModelTrain {
 
   def main(args: Array[String]): Unit = {
 
-    //stock symbol
-    val stock_symbol = "ford"
+    Logger.getLogger("org").setLevel(Level.OFF)
 
-    // create spark session
-    val spark = SparkSessionCreator.sparkSessionCreate()
+    def runModelTrain(Symbol : String): Unit = {
+        //stock symbol
+        val stock_symbol = Symbol
 
-    // train data
-    val rawTrainData = DataSourcer.rawTrainData(sparkSession = spark, Symbol = stock_symbol)
+        // create spark session
+        val spark = SparkSessionCreator.sparkSessionCreate()
 
-    // clean train data
-    val cleanTrainData = DataCleaner.cleanData(dataFrame = rawTrainData)
+        // train data
+        val rawTrainData = DataSourcer.rawTrainData(sparkSession = spark, stock_symbol)
 
-    // fitted pipeline
-    val fittedPipeline = MachineLearning.pipelineFit(dataFrame = cleanTrainData)
+        // clean train data
+        val cleanTrainData = DataCleaner.cleanData(dataFrame = rawTrainData)
 
-    // save fitted pipeline
-    pipelineSaver(pipelineModel = fittedPipeline)
+        // fitted pipeline
+        val fittedPipeline = MachineLearning.pipelineFit(dataFrame = cleanTrainData, stock_symbol)
+
+        // save fitted pipeline
+        pipelineSaver(pipelineModel = fittedPipeline, stock_symbol)
+    }
+
+    runModelTrain("ford")
 
   }
 

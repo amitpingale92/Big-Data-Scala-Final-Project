@@ -16,9 +16,9 @@ object DataSourcer {
   def rawTrainData(sparkSession: SparkSession, Symbol : String): DataFrame = {
 
     // load train data from local
-    sparkSession.read.option("header", "true").csv("./src/main/resources/F.csv") // mongoDB all documents with particular stock
-//    val readConfig: ReadConfig = ReadConfig(Map("uri" -> "mongodb://127.0.0.1/", "database" -> "scaladb", "collection" ->  Symbol)) // 1)
-//    sparkSession.read.mongo(readConfig)
+    //sparkSession.read.option("header", "true").csv("./src/main/resources/F.csv") // mongoDB all documents with particular stock
+    val readConfig: ReadConfig = ReadConfig(Map("uri" -> "mongodb://127.0.0.1/", "database" -> "scaladb", "collection" ->  Symbol)) // 1)
+    sparkSession.read.mongo(readConfig)
 
 
   }
@@ -40,5 +40,6 @@ object DataSourcer {
         sparkSession.sql("Select timestamp,open,high,low,close,volume FROM data order by Timestamp desc limit 1")
 
   }
+
 
 }

@@ -1,17 +1,19 @@
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
-import org.apache.spark.ml.regression.LinearRegression
-import org.apache.spark.ml.regression.{RandomForestRegressionModel, RandomForestRegressor}
-import org.apache.spark.ml.regression.{GBTRegressionModel, GBTRegressor}
-import org.apache.spark.ml.regression.{DecisionTreeRegressionModel, DecisionTreeRegressor}
+import org.apache.spark.ml.{Model, Pipeline, PipelineModel, PipelineStage, PredictionModel, linalg}
+import org.apache.spark.ml.regression.{DecisionTreeRegressionModel, DecisionTreeRegressor, GBTRegressionModel, GBTRegressor, LinearRegression, LinearRegressionModel, RandomForestRegressionModel, RandomForestRegressor}
 import org.apache.spark.ml.evaluation.RegressionEvaluator
-import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorAssembler, VectorIndexer}
-import OutputSaver._
+import scala.util.{Success, Failure}
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
+import OutputSaver._
 
 import scala.math._
 import org.apache.spark.sql.types._
 import java.util.HashMap
+
+import org.apache.spark.ml.util.MLWritable
 //import java.util.Map;
 
 // do final data preparations for machine learning here
@@ -19,11 +21,11 @@ import java.util.HashMap
 // this should generally return trained machine learning models and or labelled data
 // NOTE this may be merged with feature engineering to create a single pipeline
 
-object MachineLearning {
+object MachineLearning extends App {
 
 
 
-  def pipelineFit(dataFrame: DataFrame): PipelineModel = {
+  def pipelineFit(dataFrame: DataFrame, Symbol: String): PipelineModel = {
     println("*************************************")
     dataFrame.show()
     // define feature vector assembler
@@ -59,7 +61,7 @@ object MachineLearning {
       .setRegParam(0.3)
       .setElasticNetParam(0.8)
 
-    val lrModel = lr.fit(df_train)
+    val lrModel: LinearRegressionModel = lr.fit(df_train)
     val predictions_lr = lrModel.transform(df_test)
 
     // select (prediction, true label)
@@ -73,7 +75,7 @@ object MachineLearning {
       .setLabelCol("label")
       .setFeaturesCol("features")
 
-    val dtModel = dt.fit(df_train)
+    val dtModel: DecisionTreeRegressionModel = dt.fit(df_train)
     val predictions_dt = dtModel.transform(df_test)
 
     predictions_dt.select("prediction", "label", "features").show(5)
@@ -87,7 +89,7 @@ object MachineLearning {
       .setLabelCol("label")
       .setFeaturesCol("features")
 
-    val rfrModel = rf.fit(df_train)
+    val rfrModel: RandomForestRegressionModel  = rf.fit(df_train)
     val predictions_rfr = rfrModel.transform(df_test)
 
     // select (prediction, true label)
@@ -104,7 +106,7 @@ object MachineLearning {
       .setFeaturesCol("features")
       .setMaxIter(10)
 
-    val gbtModel = gbt.fit(df_train)
+    val gbtModel: GBTRegressionModel  = gbt.fit(df_train)
     val predictions_gbt = gbtModel.transform(df_test)
     predictions_gbt.select("prediction", "label", "features").show(5)
 
@@ -123,26 +125,23 @@ object MachineLearning {
       ("Gradient Boosting Regressor", rmse_gbr)).toDF("Model", "RMSE")
 
     ModelMetricDS.show()
-    OutputSaver.MetricSaver(ModelMetricDS)
+    OutputSaver.MetricSaver(ModelMetricDS, Symbol)
 
 
     //*************************  Selecting model with lowest RSME value for deployment in pipeline *************************
-//    val models = Map(
-//      rmse_lr -> lrModel,
-//      rmse_dt -> dtModel,
-//      rmse_rfr -> rfrModel,
-//      rmse_gbr -> gbtModel
-//    )
+    def lowestKeyMember[Any](m: Map[Double,Any]): Any = m(m.keys.min)
 
+    val models: Map[Double, Any] = Map(
+      rmse_lr -> lrModel,
+      rmse_dt -> dtModel,
+      rmse_rfr -> rfrModel,
+      rmse_gbr -> gbtModel
+    )
 
+   val final_model = lowestKeyMember(models).asInstanceOf[PipelineStage]
 
-    val final_model = gbtModel
+    //*************************  Creating Pipeline *************************
 
-
-    //val final_model = rfrModel
-
-
-    // chain indexers and forest in a Pipeline
     val pipeline = new Pipeline()
       .setStages(
         Array(
