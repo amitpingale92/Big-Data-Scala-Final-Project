@@ -31,6 +31,7 @@ object ModelTrain {
     }
 
     runModelTrain("ford")
+    runModelTrain("gm")
 
   }
 

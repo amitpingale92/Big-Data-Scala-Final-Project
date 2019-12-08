@@ -34,6 +34,8 @@ object ModelPredict {
     }
 
     runModelPredict("ford")
+    runModelPredict("gm")
+
 
   }
 
