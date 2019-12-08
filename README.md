@@ -1,4 +1,4 @@
-# Hedge Fund Application <br> Real Time Recommendation System
+# Hedge Fund Application <br> Real Time Risk Analysis
 
 ![alt text](https://github.com/amitpingale92/Big-Data-Scala-Final-Project/blob/master/Images/logo.png "Logo Title")
 
